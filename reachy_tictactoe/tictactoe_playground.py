@@ -68,9 +68,43 @@ class TictactoePlayground(object):
     def is_ready(self, board):
         return np.sum(board) == 0
 
+    def random_look(self):
+        dy = 0.4
+        y = np.random.rand() * dy - (dy / 2)
+
+        dz = 0.75
+        z = np.random.rand() * dz - 0.5
+
+        self.reachy.head.look_at(0.5, y, z)
+        time.sleep(1.5)
+
+    def play_invite(self):
+        look_pos = (
+            ((0.5, 0, 0), 0.2),
+            ((0.5, 0.2, -0.4), 0.5),
+            ((0.5, 0, 0), 0.2),
+            ((0.5, 0.2, -0.4), 0.5),
+            ((0.5, 0, -0.55), 0.5),
+            ((0.5, 0.2, -0.4), 0.5),
+            ((0.5, 0, -0.55), 1),
+            ((0.5, 0, 0), 1),    
+        )
+
+        for (pos, dur) in look_pos:
+            self.reachy.head.look_at(*pos)
+            time.sleep(2)
+
     def run_random_idle_behavior(self):
         logger.info('Reachy is playing a random idle behavior')
-        time.sleep(5)
+        r = np.random.rand()
+
+        if r < 0.25:
+            self.play_invite()
+        elif r < 0.75:
+            self.random_look()
+        else:
+            self.reachy.head.look_at(1, 0, 0)
+            time.sleep(1)
 
     def coin_flip(self):
         coin = np.random.rand() > 0.5
@@ -246,11 +280,53 @@ class TictactoePlayground(object):
     def run_celebration(self):
         logger.info('Reachy is playing its win behavior')
 
+        traj = moves['happy']
+
+        self.goto_base_position()
+        self.goto_position(
+            {k: v[0] for k, v in traj.items()},
+            duration=1,
+            wait=True,
+        )
+        TrajectoryPlayer(self.reachy, traj).play(wait=True)
+
+        self.goto_rest_position()
+
     def run_draw_behavior(self):
         logger.info('Reachy is playing its draw behavior')
 
+        move = (
+            ((75, -65), 1),
+            ((0, 0), 1),
+            ((75, -65), 1),
+            ((0, 0), 1),
+        )
+
+        for ((la, ra), duration) in move:
+            self.reachy.head.left_antenna.goto(
+                la, duration,
+                interpolation_mode='minjerk',
+            )
+            self.reachy.head.right_antenna.goto(
+                ra, duration,
+                interpolation_mode='minjerk',
+                wait=True,
+            )
+
+        self.goto_rest_position()
+
     def run_defeat_behavior(self):
         logger.info('Reachy is playing its defeat behavior')
+
+        traj = moves['sad']
+
+        self.goto_base_position()
+        self.goto_position(
+            {k: v[0] for k, v in traj.items()},
+            duration=1,
+            wait=True,
+        )
+        TrajectoryPlayer(self.reachy, traj).play(wait=True)
 
     # Robot lower-level control functions
 
