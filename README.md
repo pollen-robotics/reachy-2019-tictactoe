@@ -1,2 +1,1 @@
-# reachy-tictactoe
-Tic-Tac-Toe playground for Reachy
+# Tic-Tac-Toe playground for Reachy
