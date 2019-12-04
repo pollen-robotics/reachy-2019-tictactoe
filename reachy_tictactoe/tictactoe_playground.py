@@ -11,7 +11,7 @@ from .utils import piece2id, id2piece, piece2player
 from .moves import moves, rest_pos, base_pos
 from .rl_agent import value_actions
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('reachy.tictactoe')
 
 
 class TictactoePlayground(object):

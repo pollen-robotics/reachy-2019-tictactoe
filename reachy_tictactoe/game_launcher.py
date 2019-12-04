@@ -4,7 +4,7 @@ import zzlog
 
 from . import TictactoePlayground
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('reachy.tictactoe')
 
 
 def run_game_loop(tictactoe_playground):
