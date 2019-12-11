@@ -117,7 +117,7 @@ class TictactoePlayground(object):
         return coin
 
     def analyze_board(self):
-        board_pos = (0.5, 0, -0.55)
+        board_pos = (0.5, 0, -0.6)
         self.reachy.head.look_at(*board_pos)
 
         # Wait for stabilization
