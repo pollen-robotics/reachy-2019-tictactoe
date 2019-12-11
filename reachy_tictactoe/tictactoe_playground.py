@@ -197,18 +197,34 @@ class TictactoePlayground(object):
         self.goto_base_position()
         time.sleep(0.5)
 
+        medium_pos = {
+            'right_arm.shoulder_pitch': 33,
+            'right_arm.shoulder_roll': -27,
+            'right_arm.arm_yaw': 0,
+            'right_arm.elbow_pitch': -105,
+            'right_arm.forearm_yaw': -23,
+            'right_arm.hand.wrist_pitch': -25,
+            'right_arm.hand.wrist_roll': 0,
+        }
+
+        if grab_index >= 4:
+            self.goto_position(medium_pos, duration=0.5, wait=True)
+
         # Grab the pawn at grab_index
         self.goto_position(
             moves[f'grab_{grab_index}'],
-            duration=2,
+            duration=1,
             wait=True,
         )
         self.reachy.right_arm.hand.close()
 
+        if grab_index >= 4:
+            self.goto_position(medium_pos, duration=0.5, wait=True)
+
         # Lift it
         self.goto_position(
             moves['lift'],
-            duration=2,
+            duration=1,
             wait=True,
         )
 
@@ -223,12 +239,13 @@ class TictactoePlayground(object):
         }
         self.goto_position(j, duration=0.5, wait=True)
         TrajectoryPlayer(self.reachy, put).play(wait=True)
+
         self.reachy.right_arm.hand.open()
 
         # Go back to rest position
         self.goto_position(
             moves[f'back_{box_index}_upright'],
-            duration=2,
+            duration=1,
             wait=True,
         )
         self.goto_position(
@@ -342,15 +359,20 @@ class TictactoePlayground(object):
         for m in self.reachy.right_arm.motors:
             m.compliant = False
 
+        time.sleep(0.1)
+
         self.reachy.right_arm.shoulder_pitch.torque_limit = 75
         self.reachy.right_arm.elbow_pitch.torque_limit = 75
+        time.sleep(0.1)
 
         self.goto_position(base_pos, duration, wait=True)
 
     def goto_rest_position(self, duration=2.0):
         self.goto_base_position(0.6 * duration)
+        time.sleep(0.1)
 
         self.goto_position(rest_pos, 0.4 * duration, wait=True)
+        time.sleep(0.1)
 
         self.reachy.right_arm.shoulder_pitch.torque_limit = 0
         self.reachy.right_arm.elbow_pitch.torque_limit = 0
@@ -360,6 +382,8 @@ class TictactoePlayground(object):
         for m in self.reachy.right_arm.motors:
             if m.name != 'right_arm.shoulder_pitch':
                 m.compliant = True
+
+        time.sleep(0.25)
 
     def need_cooldown(self):
         motor_temperature = np.array([
