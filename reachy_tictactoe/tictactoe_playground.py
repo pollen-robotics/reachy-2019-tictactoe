@@ -10,6 +10,8 @@ from .vision import get_board_configuration, is_board_valid
 from .utils import piece2id, id2piece, piece2player
 from .moves import moves, rest_pos, base_pos
 from .rl_agent import value_actions
+from . import behavior
+
 
 logger = logging.getLogger('reachy.tictactoe')
 
@@ -87,7 +89,7 @@ class TictactoePlayground(object):
             ((0.5, 0, -0.55), 0.5),
             ((0.5, 0.2, -0.4), 0.5),
             ((0.5, 0, -0.55), 1),
-            ((0.5, 0, 0), 1),    
+            ((0.5, 0, 0), 1),
         )
 
         for (pos, dur) in look_pos:
@@ -296,54 +298,15 @@ class TictactoePlayground(object):
 
     def run_celebration(self):
         logger.info('Reachy is playing its win behavior')
-
-        traj = moves['happy']
-
-        self.goto_base_position()
-        self.goto_position(
-            {k: v[0] for k, v in traj.items()},
-            duration=1,
-            wait=True,
-        )
-        TrajectoryPlayer(self.reachy, traj).play(wait=True)
-
-        self.goto_rest_position()
+        behavior.happy(self.reachy)
 
     def run_draw_behavior(self):
         logger.info('Reachy is playing its draw behavior')
-
-        move = (
-            ((75, -65), 1),
-            ((0, 0), 1),
-            ((75, -65), 1),
-            ((0, 0), 1),
-        )
-
-        for ((la, ra), duration) in move:
-            self.reachy.head.left_antenna.goto(
-                la, duration,
-                interpolation_mode='minjerk',
-            )
-            self.reachy.head.right_antenna.goto(
-                ra, duration,
-                interpolation_mode='minjerk',
-                wait=True,
-            )
-
-        self.goto_rest_position()
+        behavior.suprise(self.reachy)
 
     def run_defeat_behavior(self):
         logger.info('Reachy is playing its defeat behavior')
-
-        traj = moves['sad']
-
-        self.goto_base_position()
-        self.goto_position(
-            {k: v[0] for k, v in traj.items()},
-            duration=1,
-            wait=True,
-        )
-        TrajectoryPlayer(self.reachy, traj).play(wait=True)
+        behavior.sad(self.reachy)
 
     # Robot lower-level control functions
 
