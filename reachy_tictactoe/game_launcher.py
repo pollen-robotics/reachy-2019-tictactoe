@@ -17,14 +17,15 @@ def run_game_loop(tictactoe_playground):
                 'board': board,
             },
         )
-        if not tictactoe_playground.is_ready(board):
-            tictactoe_playground.run_random_idle_behavior()
-        else:
+        if tictactoe_playground.is_ready(board):
             break
+
+        tictactoe_playground.run_random_idle_behavior()
+
     last_board = tictactoe_playground.reset()
 
     # Decide who goes first
-    next_player = tictactoe_playground.coin_flip()
+    reachy_turn = tictactoe_playground.coin_flip()
 
     # Start game loop
     while True:
@@ -40,22 +41,28 @@ def run_game_loop(tictactoe_playground):
             tictactoe_playground.shuffle_board()
             break
 
+        # When it's human's turn to play
+        # We wait for a change in board while running random idle behavior
+        if not reachy_turn:
+            if tictactoe_playground.has_human_played(board, last_board):
+                reachy_turn = True
+                logger.info('Next turn', extra={
+                    'next_player': 'Reachy',
+                })
+            else:
+                tictactoe_playground.run_random_idle_behavior()
+
         # When it's the robot's turn to play
         # We decide which action to take and plays it
-        if next_player:
+        if (not tictactoe_playground.is_final(board)) and reachy_turn:
             action, _ = tictactoe_playground.choose_next_action(board)
             board = tictactoe_playground.play(action, board)
 
             last_board = board
-            next_player = False
-
-        # When it's human's turn to play
-        # We wait for a change in board while running random idle behavior
-        else:
-            if tictactoe_playground.has_human_played(board, last_board):
-                next_player = True
-            else:
-                tictactoe_playground.run_random_idle_behavior()
+            reachy_turn = False
+            logger.info('Next turn', extra={
+                'next_player': 'Human',
+            })
 
         # If the game is over, determine who is the winner
         # and behave accordingly
