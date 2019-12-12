@@ -94,7 +94,7 @@ class TictactoePlayground(object):
 
         for (pos, dur) in look_pos:
             self.reachy.head.look_at(*pos)
-            time.sleep(2)
+            time.sleep(dur)
 
     def run_random_idle_behavior(self):
         logger.info('Reachy is playing a random idle behavior')
