@@ -65,7 +65,7 @@ def is_board_valid(img):
     label_index, score = res[0]
     label = valid_labels[label_index]
 
-    return label == 'valid'
+    return label == 'valid' and score > 0.75
 
 
 def img_as_pil(img):
