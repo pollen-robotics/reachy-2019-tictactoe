@@ -145,12 +145,27 @@ class TictactoePlayground(object):
         return board.flatten()
 
     def cheating_detected(self, board, last_board):
-        return False
+        # last is just after the robot played
+        delta = board - last_board
 
-        return (
-            np.sum(last_board) > np.sum(board) or
-            np.sum(last_board != board) > 1
-        )
+        # Nothing changed
+        if np.all(delta == 0):
+            return False
+
+        # A single cube was added
+        if len(np.where(delta == piece2id['cube'])[0]):
+            return False
+
+        # A single cylinder was added
+        if len(np.where(delta == piece2id['cylinder'])[0]):
+            return False
+
+        logger.warning('Cheating detected', extra={
+            'last_board': last_board,
+            'current_board': board,
+        })
+
+        return True
 
     def shuffle_board(self):
         pass

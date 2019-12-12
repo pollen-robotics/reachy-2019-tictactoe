@@ -1,4 +1,5 @@
 import logging
+import numpy as np
 
 import zzlog
 
@@ -37,12 +38,6 @@ def run_game_loop(tictactoe_playground):
         if board is None:
             continue
 
-        # If we have detected some cheating or any issue
-        # We reset the whole game
-        if tictactoe_playground.cheating_detected(board, last_board):
-            tictactoe_playground.shuffle_board()
-            break
-
         # When it's human's turn to play
         # We wait for a change in board while running random idle behavior
         if not reachy_turn:
@@ -53,6 +48,19 @@ def run_game_loop(tictactoe_playground):
                 })
             else:
                 tictactoe_playground.run_random_idle_behavior()
+
+        # If we have detected some cheating or any issue
+        # We reset the whole game
+        if tictactoe_playground.cheating_detected(board, last_board):
+            # Check again to be sure
+            double_check_board = tictactoe_playground.analyze_board()
+            if np.any(double_check_board != board):
+                # False detection, we will check again next loop
+                continue
+
+            # We're pretty sure somthing weird happened!
+            tictactoe_playground.shuffle_board()
+            break
 
         # When it's the robot's turn to play
         # We decide which action to take and plays it
