@@ -8,6 +8,8 @@ logger = logging.getLogger('reachy.tictactoe')
 
 
 def run_game_loop(tictactoe_playground):
+    logger.info('Game start')
+
     # Wait for the board to be cleaned and ready to be played
     while True:
         board = tictactoe_playground.analyze_board()
@@ -77,6 +79,8 @@ def run_game_loop(tictactoe_playground):
                 tictactoe_playground.run_draw_behavior()
 
             return winner
+
+    logger.info('Game end')
 
 
 if __name__ == '__main__':
