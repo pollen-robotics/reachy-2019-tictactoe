@@ -119,11 +119,17 @@ class TictactoePlayground(object):
         return coin
 
     def analyze_board(self):
-        board_pos = (0.5, 0, -0.6)
-        self.reachy.head.look_at(*board_pos)
+        # board_pos = (0.5, 0, -0.6)
+        # self.reachy.head.look_at(*board_pos)
+
+        self.reachy.head.neck.disk_top.target_rot_position = 97
+        self.reachy.head.neck.disk_middle.target_rot_position = 21
+        self.reachy.head.neck.disk_bottom.target_rot_position = 55
 
         # Wait for stabilization
-        time.sleep(2)
+        time.sleep(1)
+        self.reachy.head.compliant = True
+        time.sleep(0.5)
 
         img = self.reachy.head.get_image()
 
@@ -132,13 +138,27 @@ class TictactoePlayground(object):
 
         board = get_board_configuration(img)
 
-        logger.info(
-            'Analyzing board',
-            extra={
-                'board': board,
-            },
-        )
+        # TEMP:
+        import os
+        import cv2 as cv
+        while True:
+            i = np.random.randint(424242)
+            path = f'/tmp/snap.{i}.jpg'
+            if not os.path.exists(path):
+                cv.imwrite(path, img)
 
+                logger.info(
+                    'Analyzing board',
+                    extra={
+                        'board': board,
+                        'img_path': path,
+                    },
+                )
+
+                break
+
+        self.reachy.head.compliant = False
+        time.sleep(0.1)
         self.reachy.head.look_at(1, 0, 0)
         time.sleep(2)
 
