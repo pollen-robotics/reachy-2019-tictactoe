@@ -331,6 +331,7 @@ class TictactoePlayground(object):
             duration=duration,
             wait=wait,
             interpolation_mode='minjerk',
+            starting_point='goal_position',
         )
 
     def goto_base_position(self, duration=2.0):
