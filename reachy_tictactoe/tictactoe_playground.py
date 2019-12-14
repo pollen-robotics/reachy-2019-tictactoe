@@ -317,7 +317,7 @@ class TictactoePlayground(object):
 
     def run_draw_behavior(self):
         logger.info('Reachy is playing its draw behavior')
-        behavior.suprise(self.reachy)
+        behavior.surprise(self.reachy)
 
     def run_defeat_behavior(self):
         logger.info('Reachy is playing its defeat behavior')
