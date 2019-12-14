@@ -210,22 +210,21 @@ class TictactoePlayground(object):
         return board
 
     def play_pawn(self, grab_index, box_index):
+        self.reachy.head.look_at(
+            0.3, -0.3, -0.5,
+            duration=0.5,
+        )
+
         # Goto base position
         self.goto_base_position()
         time.sleep(0.5)
 
-        medium_pos = {
-            'right_arm.shoulder_pitch': 33,
-            'right_arm.shoulder_roll': -27,
-            'right_arm.arm_yaw': 0,
-            'right_arm.elbow_pitch': -105,
-            'right_arm.forearm_yaw': -23,
-            'right_arm.hand.wrist_pitch': -25,
-            'right_arm.hand.wrist_roll': 0,
-        }
-
         if grab_index >= 4:
-            self.goto_position(medium_pos, duration=0.5, wait=True)
+            self.goto_position(
+                moves['grab_3'],
+                duration=1,
+                wait=True,
+            )
 
         # Grab the pawn at grab_index
         self.goto_position(
@@ -236,7 +235,14 @@ class TictactoePlayground(object):
         self.reachy.right_arm.hand.close()
 
         if grab_index >= 4:
-            self.goto_position(medium_pos, duration=0.5, wait=True)
+            self.reachy.goto({
+                'right_arm.shoulder_pitch': self.reachy.right_arm.shoulder_pitch.goal_position + 10,
+                'right_arm.elbow_pitch': self.reachy.right_arm.elbow_pitch.goal_position - 30,
+            }, duration=1,
+               wait=True,
+               interpolation_mode='minjerk',
+               starting_point='goal_position',
+            )
 
         # Lift it
         self.goto_position(
@@ -244,6 +250,9 @@ class TictactoePlayground(object):
             duration=1,
             wait=True,
         )
+
+        self.reachy.head.look_at(0.3, 0, -0.5, duration=0.5)
+        time.sleep(0.1)
 
         # Put it in box_index
         put = moves[f'put_{box_index}_smooth_10_kp']
@@ -265,8 +274,17 @@ class TictactoePlayground(object):
             duration=1,
             wait=True,
         )
+        self.reachy.head.look_at(1, 0, 0, duration=1)
+
+        if box_index in (8, 9):
+            self.goto_position(
+                moves[f'back_to_back'],
+                duration=1,
+                wait=True,
+            )
+
         self.goto_position(
-            moves[f'lift'],
+            moves[f'back_rest'],
             duration=2,
             wait=True,
         )
