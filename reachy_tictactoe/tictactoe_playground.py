@@ -153,11 +153,11 @@ class TictactoePlayground(object):
             return False
 
         # A single cube was added
-        if len(np.where(delta == piece2id['cube'])[0]):
+        if len(np.where(delta == piece2id['cube'])[0]) == 1:
             return False
 
         # A single cylinder was added
-        if len(np.where(delta == piece2id['cylinder'])[0]):
+        if len(np.where(delta == piece2id['cylinder'])[0]) == 1:
             return False
 
         logger.warning('Cheating detected', extra={
