@@ -122,6 +122,11 @@ class TictactoePlayground(object):
         # board_pos = (0.5, 0, -0.6)
         # self.reachy.head.look_at(*board_pos)
 
+        for disk in self.reachy.head.neck.disks:
+            disk.target_rot_speed = 50
+
+        time.sleep(0.1)
+
         self.reachy.head.neck.disk_top.target_rot_position = 97
         self.reachy.head.neck.disk_middle.target_rot_position = 21
         self.reachy.head.neck.disk_bottom.target_rot_position = 55
