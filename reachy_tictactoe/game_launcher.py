@@ -94,9 +94,15 @@ def run_game_loop(tictactoe_playground):
 if __name__ == '__main__':
     import argparse
 
+    from datetime import datetime
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--log-file')
     args = parser.parse_args()
+
+    if args.log_file is not None:
+        now = datetime.now().strftime('%Y-%m-%d_%H:%M:%S.%f')
+        args.log_file += f'-{now}.log'
 
     logger = zzlog.setup(
         logger_root='',
