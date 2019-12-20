@@ -127,14 +127,9 @@ class TictactoePlayground(object):
 
         time.sleep(0.1)
 
-        self.reachy.head.neck.disk_top.target_rot_position = 97
-        self.reachy.head.neck.disk_middle.target_rot_position = 21
-        self.reachy.head.neck.disk_bottom.target_rot_position = 55
-
+        self.reachy.head.look_at(0.5, 0, -0.65)
         # Wait for stabilization
-        time.sleep(1)
-        self.reachy.head.compliant = True
-        time.sleep(0.5)
+        time.sleep(1.25)
 
         img = self.reachy.head.get_image()
 
