@@ -123,6 +123,7 @@ class TictactoePlayground(object):
         # self.reachy.head.look_at(*board_pos)
 
         for disk in self.reachy.head.neck.disks:
+            disk.compliant = False
             disk.target_rot_speed = 50
 
         time.sleep(0.1)
@@ -134,6 +135,10 @@ class TictactoePlayground(object):
         img = self.reachy.head.get_image()
 
         if not is_board_valid(img):
+            self.reachy.head.compliant = False
+            time.sleep(0.1)
+            self.reachy.head.look_at(1, 0, 0)
+            time.sleep(2)
             return
 
         board = get_board_configuration(img)
