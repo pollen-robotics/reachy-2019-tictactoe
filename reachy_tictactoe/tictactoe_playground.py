@@ -404,7 +404,7 @@ class TictactoePlayground(object):
         self.goto_position(rest_pos, 0.4 * duration, wait=True)
         time.sleep(0.1)
 
-        self.reachy.right_arm.shoulder_pitch.torque_limit = 0
+        self.reachy.right_arm.shoulder_pitch.torque_limit = 5
         self.reachy.right_arm.elbow_pitch.torque_limit = 0
 
         time.sleep(0.25)
