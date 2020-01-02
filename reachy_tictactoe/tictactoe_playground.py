@@ -195,7 +195,14 @@ class TictactoePlayground(object):
 
     def choose_next_action(self, board):
         actions = value_actions(board)
-        best_action, value = actions[0]
+
+        # If empty board starts with a random actions for diversity
+        if np.all(board == 0):
+            i = np.random.randint(0, 9)
+        else:
+            i = 0
+
+        best_action, value = actions[i]
 
         logger.info(
             'Selecting Reachy next action',
