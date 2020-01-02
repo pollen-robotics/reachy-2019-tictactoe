@@ -191,7 +191,26 @@ class TictactoePlayground(object):
         return True
 
     def shuffle_board(self):
-        pass
+        def ears_no():
+            d = 3
+            f = 2
+            time.sleep(2.5)
+            t = np.linspace(0, d, d * 100)
+            p = 25 + 25 * np.sin(2 * np.pi * f * t)
+            for pp in p:
+                self.reachy.head.left_antenna.goal_position = pp
+                time.sleep(0.01)
+
+        t = Thread(target=ears_no)
+        t.start()
+
+        self.goto_base_position()
+        self.reachy.head.look_at(0.5, 0, -0.4, duration=1)
+        TrajectoryPlayer(self.reachy, moves['shuffle-board']).play(wait=True)
+        self.goto_rest_position()
+        self.reachy.head.look_at(1, 0, 0)
+        time.sleep(1)
+        t.join()
 
     def choose_next_action(self, board):
         actions = value_actions(board)
