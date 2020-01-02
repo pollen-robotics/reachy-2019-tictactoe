@@ -34,13 +34,24 @@ board_cases = np.array((
      (530, 655, 560, 700),),
 ))
 
+# left, right, top, bottom
+board_rect = np.array((
+    275, 700, 360, 710,
+))
+
 
 def get_board_configuration(img):
     board = np.zeros((3, 3), dtype=np.uint8)
 
+    try:
+        custom_board_cases = get_board_cases(img)
+    except Exception as e:
+        logger.warning('Board detection failed', extra={'error': e})
+        custom_board_cases = board_cases
+
     for row in range(3):
         for col in range(3):
-            lx, rx, ly, ry = board_cases[row, col]
+            lx, rx, ly, ry = custom_board_cases[row, col]
             piece, _ = identify_box(img[ly:ry, lx:rx])
             # We inverse the board to present it from the Human point of view
             board[2 - row, 2 - col] = piece2id[piece]
