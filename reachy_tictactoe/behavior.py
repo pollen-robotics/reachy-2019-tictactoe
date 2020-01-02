@@ -69,7 +69,7 @@ def sad(reachy):
         reachy.goto({
             'head.left_antenna': antenna_pos,
             'head.right_antenna': -antenna_pos,
-        }, duration=1.5, wait=True, interpolation_mode='minjerk')   
+        }, duration=1.5, wait=True, interpolation_mode='minjerk')
 
     logger.info('Ending behavior', extra={'behavior': 'sad'})
 
