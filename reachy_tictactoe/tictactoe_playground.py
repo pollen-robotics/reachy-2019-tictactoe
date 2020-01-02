@@ -2,6 +2,8 @@ import numpy as np
 import logging
 import time
 
+from threading import Thread
+
 from reachy import Reachy
 from reachy.parts import RightArm, Head
 from reachy.trajectory import TrajectoryPlayer
@@ -98,15 +100,16 @@ class TictactoePlayground(object):
 
     def run_random_idle_behavior(self):
         logger.info('Reachy is playing a random idle behavior')
-        r = np.random.rand()
+        time.sleep(2)
+        # r = np.random.rand()
 
-        if r < 0.25:
-            self.play_invite()
-        elif r < 0.75:
-            self.random_look()
-        else:
-            self.reachy.head.look_at(1, 0, 0)
-            time.sleep(1)
+        # if r < 0.25:
+        #     self.play_invite()
+        # elif r < 0.75:
+        #     self.random_look()
+        # else:
+        #     self.reachy.head.look_at(1, 0, 0)
+        #     time.sleep(1)
 
     def coin_flip(self):
         coin = np.random.rand() > 0.5
@@ -144,23 +147,18 @@ class TictactoePlayground(object):
         board = get_board_configuration(img)
 
         # TEMP:
-        import os
         import cv2 as cv
-        while True:
-            i = np.random.randint(424242)
-            path = f'/tmp/snap.{i}.jpg'
-            if not os.path.exists(path):
-                cv.imwrite(path, img)
+        i = np.random.randint(1000)
+        path = f'/tmp/snap.{i}.jpg'
+        cv.imwrite(path, img)
 
-                logger.info(
-                    'Analyzing board',
-                    extra={
-                        'board': board,
-                        'img_path': path,
-                    },
-                )
-
-                break
+        logger.info(
+            'Analyzing board',
+            extra={
+                'board': board,
+                'img_path': path,
+            },
+        )
 
         self.reachy.head.compliant = False
         time.sleep(0.1)
