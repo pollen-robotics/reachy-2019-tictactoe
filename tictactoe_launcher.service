@@ -1,0 +1,13 @@
+[Unit]
+Description=TicTacToe Playground Service
+Wants=network-online.target
+After=network.target network-online.target
+[Service]
+PIDFile=/var/run/tictactoe.pid
+Environment="PATH=$PATH"
+ExecStart=/usr/bin/python3 -m reachy_tictactoe.game_launcher --log-file /home/pi/dev/reachy-tictactoe/gamelog
+User=pi
+Group=pi
+Type=simple
+[Install]
+WantedBy=multi-user.target
