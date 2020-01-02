@@ -1,5 +1,6 @@
 import numpy as np
 import cv2 as cv
+import logging
 import os
 
 from PIL import Image
@@ -9,6 +10,11 @@ from edgetpu.classification.engine import ClassificationEngine
 
 
 from .utils import piece2id
+from .detect_board import get_board_cases
+
+
+logger = logging.getLogger('reachy.tictactoe')
+
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 model_path = os.path.join(dir_path, 'models')
@@ -16,8 +22,8 @@ model_path = os.path.join(dir_path, 'models')
 boxes_classifier = ClassificationEngine(os.path.join(model_path, 'ttt-boxes.tflite'))
 boxes_labels = dataset_utils.read_label_file(os.path.join(model_path, 'ttt-boxes.txt'))
 
-# valid_classifier = ClassificationEngine('...')
-# valid_labels = dataset_utils.read_label_file('...')
+valid_classifier = ClassificationEngine(os.path.join(model_path, 'ttt-valid-board.tflite'))
+valid_labels = dataset_utils.read_label_file(os.path.join(model_path, 'ttt-valid-board.txt'))
 
 
 board_cases = np.array((
@@ -69,8 +75,9 @@ def identify_box(box_img):
 
 
 def is_board_valid(img):
-    return True
-    res = valid_classifier.classify_with_image(img_as_pil(img), top_k=1)
+    lx, rx, ly, ry = board_rect
+    board_img = img[ly:ry, lx:rx]
+    res = valid_classifier.classify_with_image(img_as_pil(board_img), top_k=1)
     assert res
 
     label_index, score = res[0]

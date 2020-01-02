@@ -36,6 +36,7 @@ def run_game_loop(tictactoe_playground):
 
         # We found an invalid board
         if board is None:
+            logger.warning('Invalid board detected')
             continue
 
         # When it's human's turn to play
