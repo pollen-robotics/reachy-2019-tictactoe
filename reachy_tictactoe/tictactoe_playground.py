@@ -364,6 +364,16 @@ class TictactoePlayground(object):
         logger.info('Reachy is playing its defeat behavior')
         behavior.sad(self.reachy)
 
+    def run_my_turn(self):
+        self.goto_base_position()
+        TrajectoryPlayer(self.reachy, moves['my-turn']).play(wait=True)
+        self.goto_rest_position()
+
+    def run_your_turn(self):
+        self.goto_base_position()
+        TrajectoryPlayer(self.reachy, moves['your-turn']).play(wait=True)
+        self.goto_rest_position()
+
     # Robot lower-level control functions
 
     def goto_position(self, goal_positions, duration, wait):
