@@ -30,6 +30,11 @@ def run_game_loop(tictactoe_playground):
     # Decide who goes first
     reachy_turn = tictactoe_playground.coin_flip()
 
+    if reachy_turn:
+        tictactoe_playground.run_my_turn()
+    else:
+        tictactoe_playground.run_your_turn()
+
     # Start game loop
     while True:
         board = tictactoe_playground.analyze_board()
