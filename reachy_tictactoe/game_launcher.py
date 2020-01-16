@@ -136,5 +136,7 @@ if __name__ == '__main__':
 
             if tictactoe_playground.need_cooldown():
                 logger.warning('Reachy needs cooldown')
+                tictactoe_playground.enter_sleep_mode()
                 tictactoe_playground.wait_for_cooldown()
+                tictactoe_playground.leave_sleep_mode()
                 logger.info('Reachy cooldown finished')

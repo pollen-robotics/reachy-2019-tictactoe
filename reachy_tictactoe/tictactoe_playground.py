@@ -2,7 +2,7 @@ import numpy as np
 import logging
 import time
 
-from threading import Thread
+from threading import Thread, Event
 
 from reachy import Reachy
 from reachy.parts import RightArm, Head
@@ -476,3 +476,34 @@ class TictactoePlayground(object):
                 break
 
             time.sleep(30)
+
+    def enter_sleep_mode(self):
+        self.reachy.head.look_at(0.5, 0, -0.65)
+        # Wait for stabilization
+        time.sleep(1.25)
+        self.reachy.head.compliant = True
+
+        self._idle_running = Event()
+        self._idle_running.set()
+
+        def _idle():
+            f = 0.15
+            amp = 30
+            offset = 30
+
+            while self._idle_running.is_set():
+                p = offset + amp * np.sin(2 * np.pi * f * time.time())
+                self.reachy.head.left_antenna.goal_position = p
+                self.reachy.head.right_antenna.goal_position = -p
+                time.sleep(0.01)
+
+        self._idle_t = Thread(target=_idle)
+        self._idle_t.start()
+
+    def leave_sleep_mode(self):
+        self.reachy.head.compliant = False
+        time.sleep(0.1)
+        self.reachy.head.look_at(1, 0, 0)
+
+        self._idle_running.clear()
+        self._idle_t.join()
