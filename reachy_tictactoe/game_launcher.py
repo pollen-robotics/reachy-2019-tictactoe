@@ -101,14 +101,17 @@ if __name__ == '__main__':
     import argparse
 
     from datetime import datetime
+    from glob import glob
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--log-file')
     args = parser.parse_args()
 
     if args.log_file is not None:
+        n = len(glob(f'{args.log_file}*.log')) + 1
+
         now = datetime.now().strftime('%Y-%m-%d_%H:%M:%S.%f')
-        args.log_file += f'-{now}.log'
+        args.log_file += f'-{n}-{now}.log'
 
     logger = zzlog.setup(
         logger_root='',
