@@ -131,9 +131,11 @@ class TictactoePlayground(object):
 
         time.sleep(0.1)
 
-        self.reachy.head.look_at(0.5, 0, -0.65)
+        self.reachy.head.look_at(0.5, 0, -0.6)
         # Wait for stabilization
-        time.sleep(1.25)
+        time.sleep(2)
+        # self.reachy.head.compliant = True
+        # time.sleep(0.5)
 
         img = self.reachy.head.get_image()
 
