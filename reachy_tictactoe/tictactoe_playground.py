@@ -139,6 +139,20 @@ class TictactoePlayground(object):
 
         img = self.reachy.head.get_image()
 
+        # TEMP:
+        import cv2 as cv
+        i = np.random.randint(1000)
+        path = f'/tmp/snap.{i}.jpg'
+        cv.imwrite(path, img)
+
+        logger.info(
+            'Getting an image from camera',
+            extra={
+                'img_path': path,
+                'disks': [d.rot_position for d in self.reachy.head.neck.disks],
+            },
+        )
+
         if not is_board_valid(img):
             self.reachy.head.compliant = False
             time.sleep(0.1)
@@ -148,14 +162,9 @@ class TictactoePlayground(object):
 
         board = get_board_configuration(img)
 
-        # TEMP:
-        import cv2 as cv
-        i = np.random.randint(1000)
-        path = f'/tmp/snap.{i}.jpg'
-        cv.imwrite(path, img)
-
+        # TEMP
         logger.info(
-            'Analyzing board',
+            'Board analyzed',
             extra={
                 'board': board,
                 'img_path': path,

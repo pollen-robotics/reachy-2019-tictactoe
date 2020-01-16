@@ -84,6 +84,11 @@ def is_board_valid(img):
     label_index, score = res[0]
     label = valid_labels[label_index]
 
+    logger.info('Board validity check', extra={
+        'label': label,
+        'score': score,
+    })
+
     return label == 'valid' and score > 0.75
 
 
