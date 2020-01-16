@@ -90,7 +90,7 @@ def run_game_loop(tictactoe_playground):
             elif winner == 'human':
                 tictactoe_playground.run_defeat_behavior()
             else:
-                tictactoe_playground.run_draw_behavior()
+                tictactoe_playground.run_defeat_behavior()
 
             return winner
 
