@@ -49,11 +49,12 @@ board_rect = np.array((
 def get_board_configuration(img):
     board = np.zeros((3, 3), dtype=np.uint8)
 
-    try:
-        custom_board_cases = get_board_cases(img)
-    except Exception as e:
-        logger.warning('Board detection failed', extra={'error': e})
-        custom_board_cases = board_cases
+    # try:
+    #     custom_board_cases = get_board_cases(img)
+    # except Exception as e:
+    #     logger.warning('Board detection failed', extra={'error': e})
+    #     custom_board_cases = board_cases
+    custom_board_cases = board_cases
 
     for row in range(3):
         for col in range(3):
