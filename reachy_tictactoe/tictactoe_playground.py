@@ -282,13 +282,12 @@ class TictactoePlayground(object):
 
     def play_pawn(self, grab_index, box_index):
         self.reachy.head.look_at(
-            0.3, -0.3, -0.5,
+            0.3, -0.3, -0.45,
             duration=0.5,
         )
 
         # Goto base position
         self.goto_base_position()
-        time.sleep(0.5)
 
         if grab_index >= 4:
             self.goto_position(
@@ -304,6 +303,9 @@ class TictactoePlayground(object):
             wait=True,
         )
         self.reachy.right_arm.hand.close()
+
+        self.reachy.head.left_antenna.goto(45, 1, interpolation_mode='minjerk')
+        self.reachy.head.right_antenna.goto(-45, 1, interpolation_mode='minjerk')
 
         if grab_index >= 4:
             self.reachy.goto({
@@ -345,6 +347,10 @@ class TictactoePlayground(object):
             duration=1,
             wait=True,
         )
+
+        self.reachy.head.left_antenna.goto(0, 0.2, interpolation_mode='minjerk')
+        self.reachy.head.right_antenna.goto(0, 0.2, interpolation_mode='minjerk')
+
         self.reachy.head.look_at(1, 0, 0, duration=1)
 
         if box_index in (8, 9):
