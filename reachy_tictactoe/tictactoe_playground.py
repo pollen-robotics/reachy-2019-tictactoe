@@ -228,7 +228,18 @@ class TictactoePlayground(object):
 
         # If empty board starts with a random actions for diversity
         if np.all(board == 0):
-            i = np.random.randint(0, 9)
+            while True:
+                i = np.random.randint(0, 9)
+                a, _ = actions[i]
+                if a != 8:
+                    break
+
+        elif np.sum(board) == piece2id['cube']:
+            a, _ = actions[0]
+            if a == 8:
+                i = 1
+            else:
+                i = 0
         else:
             i = 0
 
