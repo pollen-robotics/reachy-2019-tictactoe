@@ -79,37 +79,11 @@ class TictactoePlayground(object):
         dz = 0.75
         z = np.random.rand() * dz - 0.5
 
-        self.reachy.head.look_at(0.5, y, z)
-        time.sleep(1.5)
-
-    def play_invite(self):
-        look_pos = (
-            ((0.5, 0, 0), 0.2),
-            ((0.5, 0.2, -0.4), 0.5),
-            ((0.5, 0, 0), 0.2),
-            ((0.5, 0.2, -0.4), 0.5),
-            ((0.5, 0, -0.55), 0.5),
-            ((0.5, 0.2, -0.4), 0.5),
-            ((0.5, 0, -0.55), 1),
-            ((0.5, 0, 0), 1),
-        )
-
-        for (pos, dur) in look_pos:
-            self.reachy.head.look_at(*pos)
-            time.sleep(dur)
+        self.reachy.head.look_at(0.5, y, z, duration=1.5, wait=True)
 
     def run_random_idle_behavior(self):
         logger.info('Reachy is playing a random idle behavior')
         time.sleep(2)
-        # r = np.random.rand()
-
-        # if r < 0.25:
-        #     self.play_invite()
-        # elif r < 0.75:
-        #     self.random_look()
-        # else:
-        #     self.reachy.head.look_at(1, 0, 0)
-        #     time.sleep(1)
 
     def coin_flip(self):
         coin = np.random.rand() > 0.5
@@ -122,20 +96,12 @@ class TictactoePlayground(object):
         return coin
 
     def analyze_board(self):
-        # board_pos = (0.5, 0, -0.6)
-        # self.reachy.head.look_at(*board_pos)
-
         for disk in self.reachy.head.neck.disks:
             disk.compliant = False
-            disk.target_rot_speed = 50
 
         time.sleep(0.1)
 
-        self.reachy.head.look_at(0.5, 0, -0.6)
-        # Wait for stabilization
-        time.sleep(2)
-        # self.reachy.head.compliant = True
-        # time.sleep(0.5)
+        self.reachy.head.look_at(0.5, 0, -0.6, duration=1, wait=True)
 
         img = self.reachy.head.get_image()
 
@@ -156,8 +122,7 @@ class TictactoePlayground(object):
         if not is_board_valid(img):
             self.reachy.head.compliant = False
             time.sleep(0.1)
-            self.reachy.head.look_at(1, 0, 0)
-            time.sleep(2)
+            self.reachy.head.look_at(1, 0, 0, duration=0.75, wait=True)
             return
 
         board = get_board_configuration(img)
@@ -173,8 +138,7 @@ class TictactoePlayground(object):
 
         self.reachy.head.compliant = False
         time.sleep(0.1)
-        self.reachy.head.look_at(1, 0, 0)
-        time.sleep(2)
+        self.reachy.head.look_at(1, 0, 0, duration=0.75, wait=True)
 
         return board.flatten()
 
@@ -216,11 +180,10 @@ class TictactoePlayground(object):
         t.start()
 
         self.goto_base_position()
-        self.reachy.head.look_at(0.5, 0, -0.4, duration=1)
+        self.reachy.head.look_at(0.5, 0, -0.4, duration=1, wait=False)
         TrajectoryPlayer(self.reachy, moves['shuffle-board']).play(wait=True)
         self.goto_rest_position()
-        self.reachy.head.look_at(1, 0, 0)
-        time.sleep(1)
+        self.reachy.head.look_at(1, 0, 0, duration=1, wait=True)
         t.join()
 
     def choose_next_action(self, board):
@@ -283,7 +246,8 @@ class TictactoePlayground(object):
     def play_pawn(self, grab_index, box_index):
         self.reachy.head.look_at(
             0.3, -0.3, -0.45,
-            duration=0.5,
+            duration=0.85,
+            wait=False,
         )
 
         # Goto base position
@@ -324,7 +288,7 @@ class TictactoePlayground(object):
             wait=True,
         )
 
-        self.reachy.head.look_at(0.3, 0, -0.5, duration=0.5)
+        self.reachy.head.look_at(0.3, 0, -0.5, duration=0.5, wait=False)
         time.sleep(0.1)
 
         # Put it in box_index
@@ -351,7 +315,7 @@ class TictactoePlayground(object):
         self.reachy.head.left_antenna.goto(0, 0.2, interpolation_mode='minjerk')
         self.reachy.head.right_antenna.goto(0, 0.2, interpolation_mode='minjerk')
 
-        self.reachy.head.look_at(1, 0, 0, duration=1)
+        self.reachy.head.look_at(1, 0, 0, duration=1, wait=False)
 
         if box_index in (8, 9):
             self.goto_position(
@@ -365,6 +329,7 @@ class TictactoePlayground(object):
             duration=2,
             wait=True,
         )
+
         self.goto_rest_position()
 
     def is_final(self, board):
@@ -506,9 +471,7 @@ class TictactoePlayground(object):
             time.sleep(30)
 
     def enter_sleep_mode(self):
-        self.reachy.head.look_at(0.5, 0, -0.65)
-        # Wait for stabilization
-        time.sleep(1.25)
+        self.reachy.head.look_at(0.5, 0, -0.65, duration=1.25, wait=True)
         self.reachy.head.compliant = True
 
         self._idle_running = Event()
@@ -531,7 +494,7 @@ class TictactoePlayground(object):
     def leave_sleep_mode(self):
         self.reachy.head.compliant = False
         time.sleep(0.1)
-        self.reachy.head.look_at(1, 0, 0)
+        self.reachy.head.look_at(1, 0, 0, duration=1, wait=True)
 
         self._idle_running.clear()
         self._idle_t.join()

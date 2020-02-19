@@ -44,7 +44,7 @@ class FollowHand(object):
 
 
 def head_home(reachy, duration):
-    reachy.head.look_at(0.5, 0.0, 0)
+    reachy.head.look_at(0.5, 0.0, 0, duration=duration, wait=False)
     reachy.goto({
         'head.left_antenna': 0,
         'head.right_antenna': 0,
@@ -65,23 +65,19 @@ def sad(reachy):
     ]
 
     for (z, antenna_pos) in pos:
-        reachy.head.look_at(0.5, 0.0, z, duration=1.0)
+        reachy.head.look_at(0.5, 0.0, z, duration=1.0, wait=False)
         reachy.goto({
             'head.left_antenna': antenna_pos,
             'head.right_antenna': -antenna_pos,
         }, duration=1.5, wait=True, interpolation_mode='minjerk')
-
     logger.info('Ending behavior', extra={'behavior': 'sad'})
 
 
 def happy(reachy):
     logger.info('Starting behavior', extra={'behavior': 'happy'})
 
-    for d in reachy.head.neck.disks:
-        d.target_rot_speed = 50
-
     q = Quaternion(axis=[1, 0, 0], angle=np.deg2rad(-15))
-    reachy.head.neck.orient(q)
+    reachy.head.neck.orient(q, duration=1, wait=False)
 
     dur = 3
     t = np.linspace(0, dur, dur * 100)
@@ -101,11 +97,8 @@ def happy(reachy):
 def surprise(reachy):
     logger.info('Starting behavior', extra={'behavior': 'suprise'})
 
-    for d in reachy.head.neck.disks:
-        d.target_rot_speed = 50
-
     q = Quaternion(axis=[1, 0, 0], angle=np.deg2rad(22))
-    reachy.head.neck.orient(q)
+    reachy.head.neck.orient(q, duration=1, wait=False)
 
     reachy.goto({
         'head.left_antenna': -5,
