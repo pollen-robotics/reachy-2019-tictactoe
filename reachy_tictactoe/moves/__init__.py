@@ -22,7 +22,7 @@ rest_pos = {
     'right_arm.shoulder_roll': -15,
     'right_arm.arm_yaw': 0,
     'right_arm.elbow_pitch': -80,
-    'right_arm.forearm_yaw': -15,
+    'right_arm.hand.forearm_yaw': -15,
     'right_arm.hand.wrist_pitch': -60,
     'right_arm.hand.wrist_roll': 0,
 }
@@ -32,7 +32,7 @@ base_pos = {
     'right_arm.shoulder_roll': -15,
     'right_arm.arm_yaw': 0,
     'right_arm.elbow_pitch': -95,
-    'right_arm.forearm_yaw': -15,
+    'right_arm.hand.forearm_yaw': -15,
     'right_arm.hand.wrist_pitch': -50,
     'right_arm.hand.wrist_roll': 0,
     'right_arm.hand.gripper': -45,
