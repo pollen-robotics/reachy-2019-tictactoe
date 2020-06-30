@@ -451,34 +451,46 @@ class TictactoePlayground(object):
         motor_temperature = np.array([
             m.temperature for m in self.reachy.motors
         ])
+        orbita_temperature = np.array([
+            d.temperature for d in self.reachy.neck.disks
+        ])
+
+        temperatures = {}
+        temperatures.update({m.name: m.temperature for m in self.reachy.motors})
+        temperatures.update({d.alias: d.temperature for d in self.reachy.neck.disks})
+
         logger.info(
             'Checking Reachy motors temperature',
             extra={
-                'temperatures': {
-                    m.name: m.temperature for m in self.reachy.motors
-                }
+                'temperatures': temperatures
             }
         )
-        return np.any(motor_temperature > 50)
+        return np.any(motor_temperature > 50) or np.any(orbita_temperature > 45)
 
     def wait_for_cooldown(self):
         self.goto_rest_position()
+        self.reachy.head.look_at(0.5, 0, -0.65, duration=1.25, wait=True)
+        self.reachy.head.compliant = True
 
         while True:
             motor_temperature = np.array([
                 m.temperature for m in self.reachy.motors
             ])
+            orbita_temperature = np.array([
+                d.temperature for d in self.reachy.neck.disks
+            ])
 
+            temperatures = {}
+            temperatures.update({m.name: m.temperature for m in self.reachy.motors})
+            temperatures.update({d.alias: d.temperature for d in self.reachy.neck.disks})
             logger.warning(
                 'Motors cooling down...',
                 extra={
-                    'temperatures': {
-                        m.name: m.temperature for m in self.reachy.motors
-                    }
+                    'temperatures': temperatures
                 },
             )
 
-            if np.all(motor_temperature < 45):
+            if np.all(motor_temperature < 45) and np.all(orbita_temperature < 40):
                 break
 
             time.sleep(30)
