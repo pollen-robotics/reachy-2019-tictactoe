@@ -131,7 +131,7 @@ if __name__ == '__main__':
             winner = run_game_loop(tictactoe_playground)
             game_played += 1
             logger.info(
-                f'Game ended',
+                'Game ended',
                 extra={
                     'game_number': game_played,
                     'winner': winner,

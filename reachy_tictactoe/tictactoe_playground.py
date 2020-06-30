@@ -319,13 +319,13 @@ class TictactoePlayground(object):
 
         if box_index in (8, 9):
             self.goto_position(
-                moves[f'back_to_back'],
+                moves['back_to_back'],
                 duration=1,
                 wait=True,
             )
 
         self.goto_position(
-            moves[f'back_rest'],
+            moves['back_rest'],
             duration=2,
             wait=True,
         )
