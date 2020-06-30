@@ -57,7 +57,8 @@ def run_game_loop(tictactoe_playground):
 
         # If we have detected some cheating or any issue
         # We reset the whole game
-        if tictactoe_playground.cheating_detected(board, last_board):
+        if (tictactoe_playground.incoherent_board_detected(board) or
+                tictactoe_playground.cheating_detected(board, last_board)):
             # Check again to be sure
             double_check_board = tictactoe_playground.analyze_board()
             if np.any(double_check_board != board):

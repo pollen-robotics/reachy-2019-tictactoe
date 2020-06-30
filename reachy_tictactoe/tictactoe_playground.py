@@ -142,6 +142,19 @@ class TictactoePlayground(object):
 
         return board.flatten()
 
+    def incoherent_board_detected(self, board):
+        nb_cubes = len(np.where(board == piece2id['cube'])[0])
+        nb_cylinders = len(np.where(board == piece2id['cylinder'])[0])
+
+        if abs(nb_cubes - nb_cylinders) <= 1:
+            return False
+
+        logger.warning('Incoherent board detected', extra={
+            'current_board': board,
+        })
+
+        return True
+
     def cheating_detected(self, board, last_board):
         # last is just after the robot played
         delta = board - last_board
