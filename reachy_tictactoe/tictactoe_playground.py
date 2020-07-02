@@ -301,7 +301,7 @@ class TictactoePlayground(object):
             wait=True,
         )
 
-        self.reachy.head.look_at(0.3, 0, -0.35, duration=0.5, wait=False)
+        self.reachy.head.look_at(0.5, 0, -0.35, duration=0.5, wait=False)
         time.sleep(0.1)
 
         # Put it in box_index
@@ -455,7 +455,7 @@ class TictactoePlayground(object):
             m.temperature for m in self.reachy.motors
         ])
         orbita_temperature = np.array([
-            d.temperature for d in self.reachy.neck.disks
+            d.temperature for d in self.reachy.head.neck.disks
         ])
 
         temperatures = {}
