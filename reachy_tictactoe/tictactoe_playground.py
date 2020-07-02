@@ -24,12 +24,11 @@ class TictactoePlayground(object):
 
         self.reachy = Reachy(
             right_arm=RightArm(
-                luos_port='/dev/ttyUSB*',
+                io='/dev/ttyUSB*',
                 hand='force_gripper',
             ),
             head=Head(
-                camera_id=0,
-                luos_port='/dev/ttyUSB*',
+                io='/dev/ttyUSB*',
             ),
         )
 
