@@ -100,7 +100,8 @@ class TictactoePlayground(object):
 
         time.sleep(0.1)
 
-        self.reachy.head.look_at(0.5, 0, -0.6, duration=1, wait=True)
+        self.reachy.head.look_at(0.5, 0, -0.43, duration=1, wait=True)
+        time.sleep(0.2)
 
         img = self.reachy.head.get_image()
 
@@ -257,7 +258,7 @@ class TictactoePlayground(object):
 
     def play_pawn(self, grab_index, box_index):
         self.reachy.head.look_at(
-            0.3, -0.3, -0.45,
+            0.3, -0.3, -0.3,
             duration=0.85,
             wait=False,
         )
@@ -300,7 +301,7 @@ class TictactoePlayground(object):
             wait=True,
         )
 
-        self.reachy.head.look_at(0.3, 0, -0.5, duration=0.5, wait=False)
+        self.reachy.head.look_at(0.3, 0, -0.35, duration=0.5, wait=False)
         time.sleep(0.1)
 
         # Put it in box_index
@@ -459,7 +460,7 @@ class TictactoePlayground(object):
 
         temperatures = {}
         temperatures.update({m.name: m.temperature for m in self.reachy.motors})
-        temperatures.update({d.alias: d.temperature for d in self.reachy.neck.disks})
+        temperatures.update({d.alias: d.temperature for d in self.reachy.head.neck.disks})
 
         logger.info(
             'Checking Reachy motors temperature',
@@ -484,7 +485,7 @@ class TictactoePlayground(object):
 
             temperatures = {}
             temperatures.update({m.name: m.temperature for m in self.reachy.motors})
-            temperatures.update({d.alias: d.temperature for d in self.reachy.neck.disks})
+            temperatures.update({d.alias: d.temperature for d in self.reachy.head.neck.disks})
             logger.warning(
                 'Motors cooling down...',
                 extra={
