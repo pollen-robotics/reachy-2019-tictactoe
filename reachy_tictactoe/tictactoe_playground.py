@@ -429,6 +429,9 @@ class TictactoePlayground(object):
         self.goto_position(base_pos, duration, wait=True)
 
     def goto_rest_position(self, duration=2.0):
+        # FIXME: Why is it needed?
+        time.sleep(0.1)
+
         self.goto_base_position(0.6 * duration)
         time.sleep(0.1)
 
