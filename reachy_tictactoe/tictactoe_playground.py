@@ -1,6 +1,8 @@
 import numpy as np
 import logging
 import time
+import os
+
 
 from threading import Thread, Event
 
@@ -44,7 +46,7 @@ class TictactoePlayground(object):
                 goal_position=0, duration=2,
                 interpolation_mode='minjerk',
             )
-        self.goto_rest_position(5)
+        self.goto_rest_position()
 
     def __enter__(self):
         return self
@@ -103,7 +105,8 @@ class TictactoePlayground(object):
         self.reachy.head.look_at(0.5, 0, -0.43, duration=1, wait=True)
         time.sleep(0.2)
 
-        img = self.reachy.head.get_image()
+        # Wait an image from the camera
+        wait_for_img()     
 
         # TEMP:
         import cv2 as cv
@@ -155,7 +158,7 @@ class TictactoePlayground(object):
 
         return True
 
-    def cheating_detected(self, board, last_board):
+    def cheating_detected(self, board, last_board, reachy_turn):
         # last is just after the robot played
         delta = board - last_board
 
@@ -169,6 +172,9 @@ class TictactoePlayground(object):
 
         # A single cylinder was added
         if len(np.where(delta == piece2id['cylinder'])[0]) == 1:
+            # If the human added a cylinder 
+            if not reachy_turn : 
+                return True 
             return False
 
         logger.warning('Cheating detected', extra={
@@ -354,11 +360,14 @@ class TictactoePlayground(object):
 
     def has_human_played(self, current_board, last_board):
         cube = piece2id['cube']
+        
+        delta = current_board - last_board 
 
-        return (
-            np.any(current_board != last_board) or
-            np.sum(current_board == cube) > np.sum(last_board == cube)
-        )
+        return np.sum(delta != 0) == 1 and np.sum(delta) == 2 
+#         return (
+#             np.any(current_board != last_board) or
+#             np.sum(current_board == cube) > np.sum(last_board == cube)
+#         )
 
     def get_winner(self, board):
         win_configurations = (
@@ -450,6 +459,14 @@ class TictactoePlayground(object):
 
         time.sleep(0.25)
 
+    def wait_for_img() : 
+        start = time.time()
+        while time.time() - start <= 30 : 
+            img = self.reachy.head.get_image()
+            if img =! [] :  
+                return 
+        os.system('sudo reboot')
+
     def need_cooldown(self):
         motor_temperature = np.array([
             m.temperature for m in self.reachy.motors
@@ -480,7 +497,7 @@ class TictactoePlayground(object):
                 m.temperature for m in self.reachy.motors
             ])
             orbita_temperature = np.array([
-                d.temperature for d in self.reachy.neck.disks
+                d.temperature for d in self.reachy.head.neck.disks
             ])
 
             temperatures = {}

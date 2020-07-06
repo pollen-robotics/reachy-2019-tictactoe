@@ -67,11 +67,17 @@ def get_board_configuration(img):
 
 
 def identify_box(box_img):
-    res = boxes_classifier.classify_with_image(img_as_pil(box_img), top_k=1)
-    assert res
-
-    label_index, score = res[0]
-    label = boxes_labels[label_index]
+    nb = [0, 0, 0] # empty, cylinder, cube 
+    
+    # classify the same box 5 times to avoid misclassification 
+    for _ in range(5) :
+        res = boxes_classifier.classify_with_image(img_as_pil(box_img), top_k=1)
+        assert res
+        
+        label_index, score = res[0]
+        nb[label_index] += 1 
+        
+    label = boxes_labels[np.argmax(nb)]
     return label, score
 
 
@@ -89,7 +95,7 @@ def is_board_valid(img):
         'score': score,
     })
 
-    return label == 'valid' and score > 0.75
+    return label == 'valid' and score > 0.65
 
 
 def img_as_pil(img):

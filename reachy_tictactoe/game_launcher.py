@@ -11,9 +11,12 @@ logger = logging.getLogger('reachy.tictactoe')
 def run_game_loop(tictactoe_playground):
     logger.info('Game start')
 
+    count_head_down = 0 
+
     # Wait for the board to be cleaned and ready to be played
-    while True:
+    while True :     
         board = tictactoe_playground.analyze_board()
+        count_head_down += 1
         logger.info(
             'Waiting for board to be cleaned.',
             extra={
@@ -21,7 +24,12 @@ def run_game_loop(tictactoe_playground):
             },
         )
         if tictactoe_playground.is_ready(board):
+            count_head_down = 0 
             break
+
+        if count_head_down == 10 :
+            logger.info("No one to play with apparently, Reachy goes into sleep mode.") 
+            tictactoe_playground.enter_sleep_mode()
 
         tictactoe_playground.run_random_idle_behavior()
 
@@ -53,12 +61,13 @@ def run_game_loop(tictactoe_playground):
                     'next_player': 'Reachy',
                 })
             else:
-                tictactoe_playground.run_random_idle_behavior()
-
+                tictactoe_playground.run_random_idle_behavior()        
+                
+                
         # If we have detected some cheating or any issue
         # We reset the whole game
         if (tictactoe_playground.incoherent_board_detected(board) or
-                tictactoe_playground.cheating_detected(board, last_board)):
+                tictactoe_playground.cheating_detected(board, last_board, reachy_turn)):
             # Check again to be sure
             double_check_board = tictactoe_playground.analyze_board()
             if np.any(double_check_board != board):
