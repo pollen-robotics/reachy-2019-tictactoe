@@ -14,7 +14,7 @@ def run_game_loop(tictactoe_playground):
     count_head_down = 0 
 
     # Wait for the board to be cleaned and ready to be played
-    while True :     
+    while True:     
         board = tictactoe_playground.analyze_board()
         count_head_down += 1
         logger.info(

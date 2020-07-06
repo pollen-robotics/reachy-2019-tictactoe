@@ -106,7 +106,8 @@ class TictactoePlayground(object):
         time.sleep(0.2)
 
         # Wait an image from the camera
-        wait_for_img()     
+        self.wait_for_img()     
+        img = self.reachy.head.get_image()
 
         # TEMP:
         import cv2 as cv
@@ -459,11 +460,11 @@ class TictactoePlayground(object):
 
         time.sleep(0.25)
 
-    def wait_for_img() : 
+    def wait_for_img(self): 
         start = time.time()
-        while time.time() - start <= 30 : 
+        while time.time() - start <= 30: 
             img = self.reachy.head.get_image()
-            if img =! [] :  
+            if img != []:  
                 return 
         os.system('sudo reboot')
 
