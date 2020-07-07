@@ -106,7 +106,7 @@ class TictactoePlayground(object):
         time.sleep(0.2)
 
         # Wait an image from the camera
-        self.wait_for_img()     
+        self.wait_for_img()
         img = self.reachy.head.get_image()
 
         # TEMP:
@@ -129,7 +129,12 @@ class TictactoePlayground(object):
             self.reachy.head.look_at(1, 0, 0, duration=0.75, wait=True)
             return
 
-        board = get_board_configuration(img)
+        board, sanity_check = get_board_configuration(img)
+
+        while not sanity_check:
+            img = self.reachy.head.get_image()
+            logger.info('Box classification uncertain')
+            board, sanity_check = get_board_configuration(img)
 
         # TEMP
         logger.info(
@@ -173,9 +178,9 @@ class TictactoePlayground(object):
 
         # A single cylinder was added
         if len(np.where(delta == piece2id['cylinder'])[0]) == 1:
-            # If the human added a cylinder 
-            if not reachy_turn : 
-                return True 
+            # If the human added a cylinder
+            if not reachy_turn:
+                return True
             return False
 
         logger.warning('Cheating detected', extra={
@@ -361,14 +366,11 @@ class TictactoePlayground(object):
 
     def has_human_played(self, current_board, last_board):
         cube = piece2id['cube']
-        
-        delta = current_board - last_board 
 
-        return np.sum(delta != 0) == 1 and np.sum(delta) == 2 
-#         return (
-#             np.any(current_board != last_board) or
-#             np.sum(current_board == cube) > np.sum(last_board == cube)
-#         )
+        return (
+            np.any(current_board != last_board) and
+            np.sum(current_board == cube) > np.sum(last_board == cube)
+        )
 
     def get_winner(self, board):
         win_configurations = (
@@ -460,12 +462,13 @@ class TictactoePlayground(object):
 
         time.sleep(0.25)
 
-    def wait_for_img(self): 
+    def wait_for_img(self):
         start = time.time()
-        while time.time() - start <= 30: 
+        while time.time() - start <= 30:
             img = self.reachy.head.get_image()
-            if img != []:  
-                return 
+            if img != []:
+                return
+        logger.warning('No image received for 30 sec, going to reboot.')
         os.system('sudo reboot')
 
     def need_cooldown(self):

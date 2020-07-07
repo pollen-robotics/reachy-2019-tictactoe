@@ -55,29 +55,28 @@ def get_board_configuration(img):
     #     logger.warning('Board detection failed', extra={'error': e})
     #     custom_board_cases = board_cases
     custom_board_cases = board_cases
+    sanity_check = True
 
     for row in range(3):
         for col in range(3):
             lx, rx, ly, ry = custom_board_cases[row, col]
-            piece, _ = identify_box(img[ly:ry, lx:rx])
+            piece, score = identify_box(img[ly:ry, lx:rx])
+            if score < 0.9:
+                sanity_check = False
+                return [], sanity_check
             # We inverse the board to present it from the Human point of view
             board[2 - row, 2 - col] = piece2id[piece]
 
-    return board
+    return board, sanity_check
 
 
 def identify_box(box_img):
-    nb = [0, 0, 0] # empty, cylinder, cube 
-    
-    # classify the same box 5 times to avoid misclassification 
-    for _ in range(5) :
-        res = boxes_classifier.classify_with_image(img_as_pil(box_img), top_k=1)
-        assert res
-        
-        label_index, score = res[0]
-        nb[label_index] += 1 
-        
-    label = boxes_labels[np.argmax(nb)]
+
+    res = boxes_classifier.classify_with_image(img_as_pil(box_img), top_k=1)
+    assert res
+
+    label, score = res[0]
+
     return label, score
 
 
