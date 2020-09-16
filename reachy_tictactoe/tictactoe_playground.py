@@ -505,7 +505,7 @@ class TictactoePlayground(object):
 
             temperatures = {}
             temperatures.update({m.name: m.temperature for m in self.reachy.motors})
-            temperatures.update({d.alias: d.temperature for d in self.reachy.head.neck.disks})
+            temperatures.update({d.name: d.temperature for d in self.reachy.head.neck.disks})
             logger.warning(
                 'Motors cooling down...',
                 extra={
