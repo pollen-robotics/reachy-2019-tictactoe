@@ -130,7 +130,11 @@ class TictactoePlayground(object):
 
         board, sanity_check = get_board_configuration(img)
 
+        tic = time.time()
+        
         while not sanity_check:
+            if time.time() - tic > 2.0:
+                break
             img = self.reachy.head.get_image()
             logger.info('Box classification uncertain')
             board, sanity_check = get_board_configuration(img)
