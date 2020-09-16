@@ -38,7 +38,6 @@ class TictactoePlayground(object):
 
     def setup(self):
         logger.info('Setup the playground')
-        self.reachy.head.homing()
 
         for antenna in self.reachy.head.motors:
             antenna.compliant = False
