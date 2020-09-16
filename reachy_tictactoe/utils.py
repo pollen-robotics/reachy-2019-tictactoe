@@ -1,6 +1,6 @@
 piece2id = {
-    'cube': 2,
-    'cylinder': 1,
+    'cube': 1,
+    'cylinder': 2,
     'none': 0,
 }
 
