@@ -11,12 +11,12 @@ logger = logging.getLogger('reachy.tictactoe')
 def run_game_loop(tictactoe_playground):
     logger.info('Game start')
 
-    count_head_down = 0
+#    count_head_down = 0
 
     # Wait for the board to be cleaned and ready to be played
     while True:
         board = tictactoe_playground.analyze_board()
-        count_head_down += 1
+ #       count_head_down += 1
         logger.info(
             'Waiting for board to be cleaned.',
             extra={
@@ -24,12 +24,12 @@ def run_game_loop(tictactoe_playground):
             },
         )
         if tictactoe_playground.is_ready(board):
-            count_head_down = 0
+#            count_head_down = 0
             break
 
-        if count_head_down == 20:
-            logger.info("No one to play with apparently, Reachy goes into sleep mode.")
-            tictactoe_playground.enter_sleep_mode()
+ #       if count_head_down == 20:
+ #           logger.info("No one to play with apparently, Reachy goes into sleep mode.")
+ #           tictactoe_playground.enter_sleep_mode()
 
         tictactoe_playground.run_random_idle_behavior()
 

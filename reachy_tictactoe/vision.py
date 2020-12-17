@@ -27,17 +27,17 @@ valid_labels = dataset_utils.read_label_file(os.path.join(model_path, 'ttt-valid
 
 
 board_cases = np.array((
-    ((320, 410, 370, 460),
-     (410, 500, 370, 460),
-     (500, 600, 370, 460),),
+    ((209, 316, 253, 346), #Coordinates first board cases (top-left corner) (Xbl, Xbr, Ytr, Ybr)
+     (316, 425, 253, 346), #Coordinates second board cases
+     (425, 529, 253, 346),),
 
-    ((300, 410, 460, 560),
-     (410, 510, 460, 560),
-     (510, 625, 460, 560),),
+    ((189, 306, 346, 455),
+     (306, 428, 346, 455),
+     (428, 538, 346, 455),),
 
-    ((280, 400, 560, 700),
-     (400, 510, 560, 700),
-     (510, 635, 560, 700),),
+    ((174, 299, 455, 580),
+     (299, 429, 455, 580),
+     (429, 551, 455, 580),),
 ))
 
 # left, right, top, bottom
@@ -61,12 +61,13 @@ def get_board_configuration(img):
         for col in range(3):
             lx, rx, ly, ry = custom_board_cases[row, col]
             piece, score = identify_box(img[ly:ry, lx:rx])
+            #if score < 0.9:
+            #    sanity_check = False
+            #    return [], sanity_check
+            # We invert the board to present it from the Human point of view
             if score < 0.9:
-                sanity_check = False
-                return [], sanity_check
-            # We inverse the board to present it from the Human point of view
-            board[2 - row, 2 - col] = piece2id[piece]
-
+                piece = 0
+            board[2 - row, 2 - col] = piece
     return board, sanity_check
 
 

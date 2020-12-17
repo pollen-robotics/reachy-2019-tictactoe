@@ -101,12 +101,12 @@ class TictactoePlayground(object):
 
         time.sleep(0.1)
 
-        self.reachy.head.look_at(0.5, 0, -0.43, duration=1, wait=True)
+        self.reachy.head.look_at(0.5, 0, z=-0.6, duration=1, wait=True)
         time.sleep(0.2)
 
         # Wait an image from the camera
         self.wait_for_img()
-        img = self.reachy.head.get_image()
+        success, img = self.reachy.head.right_camera.read()
 
         # TEMP:
         import cv2 as cv
@@ -128,16 +128,10 @@ class TictactoePlayground(object):
             self.reachy.head.look_at(1, 0, 0, duration=0.75, wait=True)
             return
 
-        board, sanity_check = get_board_configuration(img)
-
         tic = time.time()
         
-        while not sanity_check:
-            if time.time() - tic > 2.0:
-                break
-            img = self.reachy.head.get_image()
-            logger.info('Box classification uncertain')
-            board, sanity_check = get_board_configuration(img)
+        success, img = self.reachy.head.right_camera.read()
+        board, _ = get_board_configuration(img)
 
         # TEMP
         logger.info(
@@ -468,7 +462,7 @@ class TictactoePlayground(object):
     def wait_for_img(self):
         start = time.time()
         while time.time() - start <= 30:
-            img = self.reachy.head.get_image()
+            success, img = self.reachy.head.right_camera.read()
             if img != []:
                 return
         logger.warning('No image received for 30 sec, going to reboot.')
