@@ -1,1 +1,1 @@
-# Tic-Tac-Toe playground for Reachy
+# Tic-Tac-Toe playground for Reachy 2019
